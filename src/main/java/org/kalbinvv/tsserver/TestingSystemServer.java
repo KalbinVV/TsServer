@@ -1,20 +1,37 @@
 package org.kalbinvv.tsserver;
 
+import java.util.Scanner;
+
+import org.kalbinvv.tsserver.commands.*;
+
 public class TestingSystemServer {
 
 	private static Thread serverThread;
 	private static Boolean serverIsRunning;
+	private static ServerHandler serverHandler;
+	private static CommandsHandler commandsHandler;
 
 	public static void main(String[] args) {
+		commandsHandler= new CommandsHandler();
+		registerCommands();
+		setServerHandler(new ServerHandler());
 		serverThread = new Thread(new ServerThread());
 		serverThread.start();
 		System.out.println("Server started on port 2090!");
 		serverIsRunning = true;
-		try {
-			serverThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		Scanner scanner = new Scanner(System.in);
+		while(serverIsRunning) {
+			String command = scanner.nextLine();
+			if(!commandsHandler.handleCommand(command)) {
+				System.out.println("Command can't run!");
+			}
 		}
+		scanner.close();
+	}
+	
+	private static void registerCommands() {
+		commandsHandler.registerCommand("help", new HelpCommand());
+		commandsHandler.registerCommand("adduser", new AddUserCommand());
 	}
 
 	public static Boolean getServerIsRunning() {
@@ -23,6 +40,14 @@ public class TestingSystemServer {
 
 	public static void setServerIsRunning(Boolean serverIsRunning) {
 		TestingSystemServer.serverIsRunning = serverIsRunning;
+	}
+
+	public static ServerHandler getServerHandler() {
+		return serverHandler;
+	}
+
+	public static void setServerHandler(ServerHandler serverHandler) {
+		TestingSystemServer.serverHandler = serverHandler;
 	}
 }
 
