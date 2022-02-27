@@ -22,12 +22,12 @@ public class ServerHandler {
 	public Response handleRequest(Connection connection) {
 		Response response = null;
 		Request request = connection.getRequest();
-		if(request.getRequestType() == RequestType.UserConnect) {
+		if(request.getType() == RequestType.UserConnect) {
 			User user = (User) request.getObject();
 			System.out.println("Trying to connect: " 
 					+ user.getName() + " " + user.getAddress().toString());
 			response = serverStorage.authUser(user);
-			if(response.getResponseType() == ResponseType.SuccessfulConnect) {
+			if(response.getType() == ResponseType.SuccessfulConnect) {
 				System.out.println("Succesful connect: " + 
 						user.getName() + " " + user.getAddress().toString());
 			}else {

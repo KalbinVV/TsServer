@@ -19,7 +19,7 @@ public class AddUserCommand implements Command{
 			return false;
 		}
 		serverHandler.addUser(usersParams[0], usersParams[1]);
-		System.out.println("Users successful added!");
+		System.out.println("User successful added!");
 		return true;
 	}
 
