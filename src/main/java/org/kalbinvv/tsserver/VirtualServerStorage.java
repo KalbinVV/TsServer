@@ -32,6 +32,20 @@ public class VirtualServerStorage implements ServerStorage{
 	public void addUser(User user) {
 		users.add(user);
 	}
+	
+	@Override
+	public void removeUser(User user) {
+		users.removeIf((User userNode) -> {
+			return userNode.getName().equals(user.getName());
+		});
+	}
+
+	@Override
+	public void removeUserFromOnline(User user) {
+		onlineUsers.removeIf((User userNode) -> {
+			return userNode.getName().equals(user.getName());
+		});
+	}
 
 	@Override
 	public Response authUser(User user) {
@@ -51,6 +65,15 @@ public class VirtualServerStorage implements ServerStorage{
 					new String("Неправильно введён логин или пароль!"));
 		}
 	}
+	
+	@Override
+	public boolean isAnonymousUsersAllowed() {
+		return anonymousUsersAllowed;
+	}
+	
+	public void setAnonymousUsersAllowed(boolean anonymousUsersAllowed) {
+		this.anonymousUsersAllowed = anonymousUsersAllowed;
+	}
 
 	@Override
 	public boolean isUserExist(UserEntry user) {
@@ -66,6 +89,11 @@ public class VirtualServerStorage implements ServerStorage{
 
 	@Override
 	public List<User> getUsers() {
+		return users;
+	}
+	
+	@Override
+	public List<User> getOnlineUsers() {
 		return onlineUsers;
 	}
 

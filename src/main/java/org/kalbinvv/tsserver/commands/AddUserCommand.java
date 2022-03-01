@@ -1,5 +1,6 @@
 package org.kalbinvv.tsserver.commands;
 
+import org.kalbinvv.tscore.user.User;
 import org.kalbinvv.tsserver.ServerHandler;
 import org.kalbinvv.tsserver.TestingSystemServer;
 
@@ -18,7 +19,7 @@ public class AddUserCommand implements Command{
 			System.out.println("Invalid format!");
 			return false;
 		}
-		serverHandler.addUser(usersParams[0], usersParams[1]);
+		serverHandler.getServerStorage().addUser(new User(usersParams[0], usersParams[1]));
 		System.out.println("User successful added!");
 		return true;
 	}
