@@ -9,7 +9,7 @@ import org.kalbinvv.tscore.user.UserEntry;
 
 public interface ServerStorage {
 
-	public void addUser(String login, String pass);
+	public void addUser(User user);
 	public Response authUser(User user);
 	public boolean isUserExist(UserEntry user);
 	public List<User> getUsers();

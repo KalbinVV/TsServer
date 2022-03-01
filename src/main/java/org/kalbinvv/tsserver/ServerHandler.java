@@ -18,7 +18,7 @@ public class ServerHandler {
 	}
 
 	public void addUser(String login, String pass) {
-		getServerStorage().addUser(login, pass);
+		getServerStorage().addUser(new User(login, pass));
 	}
 
 	public Response handleRequest(Connection connection) {
@@ -38,28 +38,41 @@ public class ServerHandler {
 			}
 		}else if(request.getType() == RequestType.AddUser){
 			UserEntry userEntry = (UserEntry) request.getObject();
-			if(serverStorage.isUserExist(userEntry)) {
-				response = new Response(ResponseType.Unsuccessful, "Пользователь уже существует!");
+			response = addUserLampda(request, new User(userEntry.name, userEntry.pass));
+		}else if(request.getType() == RequestType.AddAdminUser) {
+			UserEntry userEntry = (UserEntry) request.getObject();
+			User adminUser = new User(userEntry.name, userEntry.pass);
+			adminUser.setType(UserType.Admin);
+			response = addUserLampda(request, adminUser);
+		}
+		return response;
+	}
+	
+	private Response addUserLampda(Request request, User user) {
+		UserEntry userEntry = (UserEntry) request.getObject();
+		Response response = null;
+		if(serverStorage.isUserExist(userEntry)) {
+			response = new Response(ResponseType.Unsuccessful, "Пользователь уже существует!");
+		}else {
+			if(request.from().getType() == UserType.Admin) {
+				serverStorage.addUser(user);
+				System.out.println("User added: " + userEntry.name + "\nFrom: "
+						+ request.from().getName() + " "
+						+ request.from().getAddress().toString());
+				response = new Response(ResponseType.Successful);
 			}else {
-				if(request.from().getType() == UserType.Admin) {
-					serverStorage.addUser(userEntry.name, userEntry.pass);
-					System.out.println("User added: " + userEntry.name + "\nFrom: "
-							+ request.from().getName());
-					response = new Response(ResponseType.Successful);
-				}else {
-					System.out.println("Failed user add: " + userEntry.name + "\nFrom: "
-							+ request.from().getName() + "/" 
-							+ request.from().getAddress().toString());
-					response = new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
-				}
+				System.out.println("Failed user add: " + userEntry.name + "\nFrom: "
+						+ request.from().getName() + " " 
+						+ request.from().getAddress().toString());
+				response = new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
 			}
 		}
 		return response;
 	}
-
+	
+	
 	public ServerStorage getServerStorage() {
 		return serverStorage;
 	}
-
 
 }

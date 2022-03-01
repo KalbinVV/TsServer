@@ -29,8 +29,8 @@ public class VirtualServerStorage implements ServerStorage{
 	}
 
 	@Override
-	public void addUser(String login, String pass) {
-		users.add(new User(login, pass));
+	public void addUser(User user) {
+		users.add(user);
 	}
 
 	@Override
