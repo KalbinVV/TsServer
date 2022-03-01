@@ -6,6 +6,8 @@ import org.kalbinvv.tscore.net.RequestType;
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.user.User;
+import org.kalbinvv.tscore.user.UserEntry;
+import org.kalbinvv.tscore.user.UserType;
 
 public class ServerHandler {
 
@@ -16,9 +18,9 @@ public class ServerHandler {
 	}
 
 	public void addUser(String login, String pass) {
-		serverStorage.addUser(login, pass);
+		getServerStorage().addUser(login, pass);
 	}
-	
+
 	public Response handleRequest(Connection connection) {
 		Response response = null;
 		Request request = connection.getRequest();
@@ -26,17 +28,37 @@ public class ServerHandler {
 			User user = (User) request.getObject();
 			System.out.println("Trying to connect: " 
 					+ user.getName() + " " + user.getAddress().toString());
-			response = serverStorage.authUser(user);
-			if(response.getType() == ResponseType.SuccessfulConnect) {
+			response = getServerStorage().authUser(user);
+			if(response.getType() == ResponseType.Successful) {
 				System.out.println("Succesful connect: " + 
 						user.getName() + " " + user.getAddress().toString());
 			}else {
 				System.out.println("Unsuccesful connect: " 
 						+ user.getName() + " " + user.getAddress().toString());
 			}
-			connection.sendResponse(response);
+		}else if(request.getType() == RequestType.AddUser){
+			UserEntry userEntry = (UserEntry) request.getObject();
+			if(serverStorage.isUserExist(userEntry)) {
+				response = new Response(ResponseType.Unsuccessful, "Пользователь уже существует!");
+			}else {
+				if(request.from().getType() == UserType.Admin) {
+					serverStorage.addUser(userEntry.name, userEntry.pass);
+					System.out.println("User added: " + userEntry.name + "\nFrom: "
+							+ request.from().getName());
+					response = new Response(ResponseType.Successful);
+				}else {
+					System.out.println("Failed user add: " + userEntry.name + "\nFrom: "
+							+ request.from().getName() + "/" 
+							+ request.from().getAddress().toString());
+					response = new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
+				}
+			}
 		}
 		return response;
+	}
+
+	public ServerStorage getServerStorage() {
+		return serverStorage;
 	}
 
 

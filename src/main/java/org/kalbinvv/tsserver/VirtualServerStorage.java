@@ -1,6 +1,8 @@
 package org.kalbinvv.tsserver;
 
 import java.util.ArrayList;
+
+import java.util.Arrays;
 import java.util.List;
 
 import org.kalbinvv.tscore.net.Response;
@@ -11,40 +13,55 @@ import org.kalbinvv.tscore.user.UserEntry;
 import org.kalbinvv.tscore.user.UserType;
 
 public class VirtualServerStorage implements ServerStorage{
-	
-	private List<UserEntry> usersEntries;
+
+	private List<User> users;
 	private List<User> onlineUsers;
 	private List<Test> tests;
 	private boolean anonymousUsersAllowed;
-	
+
 	public VirtualServerStorage() {
-		usersEntries = new ArrayList<UserEntry>();
+		User defaultAdminUser = new User("admin", "admin");
+		defaultAdminUser.setType(UserType.Admin);
+		users = new ArrayList<User>(Arrays.asList(defaultAdminUser));
 		onlineUsers = new ArrayList<User>();
 		tests = new ArrayList<Test>();
 		anonymousUsersAllowed = false;
 	}
-	
+
 	@Override
 	public void addUser(String login, String pass) {
-		usersEntries.add(new UserEntry(login, pass));
+		users.add(new User(login, pass));
 	}
 
 	@Override
 	public Response authUser(User user) {
-		if(user.getUserType() == UserType.Quest && !anonymousUsersAllowed) {
-			return new Response(ResponseType.UnsuccessfulConnect, 
+		if(user.getPass().isEmpty() && !anonymousUsersAllowed) {
+			return new Response(ResponseType.Unsuccessful, 
 					new String("Сервер запретил подключение анонимных пользователей!"));
 		}else {
-			for(UserEntry userEntry : usersEntries) {
+			for(User userNode : users) {
+				UserEntry userEntry = userNode.toEntry();
 				if(userEntry.name.equals(user.getName()) 
 						&& userEntry.pass.equals(user.getPass())) {
 					onlineUsers.add(user);
-					return new Response(ResponseType.SuccessfulConnect);
+					return new Response(ResponseType.Successful, userNode);
 				}
 			}
-			return new Response(ResponseType.UnsuccessfulConnect, 
+			return new Response(ResponseType.Unsuccessful, 
 					new String("Неправильно введён логин или пароль!"));
 		}
+	}
+
+	@Override
+	public boolean isUserExist(UserEntry user) {
+		for(User userNode : users) {
+			UserEntry userEntry = userNode.toEntry();
+			if(userEntry.name.equals(user.name) 
+					&& userEntry.pass.equals(user)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

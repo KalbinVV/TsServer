@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 import org.kalbinvv.tscore.net.Connection;
+import org.kalbinvv.tscore.net.Response;
 
 public class ServerThread implements Runnable{
 	
@@ -19,7 +20,8 @@ public class ServerThread implements Runnable{
 			serverSocket = new ServerSocket(serverPort);
 			while(TestingSystemServer.getServerIsRunning()) {
 				Connection connection = new Connection(serverSocket.accept());
-				serverHandler.handleRequest(connection);
+				Response response = serverHandler.handleRequest(connection);
+				connection.sendResponse(response);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
