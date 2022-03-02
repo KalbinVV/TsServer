@@ -27,7 +27,7 @@ public class ServerHandler {
 		registerEvent(RequestType.AddAdminUser, new OnAdminAddEvent());
 		registerEvent(RequestType.GetOnlineUsersList, new OnGetOnlinePlayersEvent());
 		registerEvent(RequestType.GetAnonymousUsersAllowedSetting, new OnViewUsersAllowedSetting());
-		//registerEvent(RequestType.ChangesAnonymousUsersAllowedSetting, new OnChangeUsersAllowedSetting());
+		registerEvent(RequestType.ChangesAnonymousUsersAllowedSetting, new OnChangeUsersAllowedSetting());
 	}
 
 
@@ -37,6 +37,7 @@ public class ServerHandler {
 		if(events.containsKey(request.getType())) {
 			response = events.get(request.getType()).handle(request, connection);
 		}else {
+			System.out.println("Undefined request!");
 			response = new Response(ResponseType.Unsuccessful, "Неизвестная операция!");
 		}
 		return response;

@@ -32,7 +32,7 @@ public class VirtualServerStorage implements ServerStorage{
 	public void addUser(User user) {
 		users.add(user);
 	}
-	
+
 	@Override
 	public void removeUser(User user) {
 		users.removeIf((User userNode) -> {
@@ -49,9 +49,15 @@ public class VirtualServerStorage implements ServerStorage{
 
 	@Override
 	public Response authUser(User user) {
+		if(user.getName().isEmpty()) return new Response(ResponseType.Unsuccessful, 
+				"Имя не может быть пустым!");
 		if(user.getPass().isEmpty() && !anonymousUsersAllowed) {
 			return new Response(ResponseType.Unsuccessful, 
 					new String("Сервер запретил подключение анонимных пользователей!"));
+		}else if(anonymousUsersAllowed && user.getPass().isEmpty()){
+			System.out.println("Anonymous user joined: " + user.getName());
+			onlineUsers.add(user);
+			return new Response(ResponseType.Successful, user);
 		}else {
 			for(User userNode : users) {
 				UserEntry userEntry = userNode.toEntry();
@@ -65,12 +71,12 @@ public class VirtualServerStorage implements ServerStorage{
 					new String("Неправильно введён логин или пароль!"));
 		}
 	}
-	
+
 	@Override
 	public boolean isAnonymousUsersAllowed() {
 		return anonymousUsersAllowed;
 	}
-	
+
 	public void setAnonymousUsersAllowed(boolean anonymousUsersAllowed) {
 		this.anonymousUsersAllowed = anonymousUsersAllowed;
 	}
@@ -91,7 +97,7 @@ public class VirtualServerStorage implements ServerStorage{
 	public List<User> getUsers() {
 		return users;
 	}
-	
+
 	@Override
 	public List<User> getOnlineUsers() {
 		return onlineUsers;
