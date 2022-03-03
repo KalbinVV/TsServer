@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
+import org.kalbinvv.tscore.test.Question;
+import org.kalbinvv.tscore.test.SimpleTest;
 import org.kalbinvv.tscore.test.Test;
 import org.kalbinvv.tscore.user.User;
 import org.kalbinvv.tscore.user.UserEntry;
@@ -24,7 +26,8 @@ public class VirtualServerStorage implements ServerStorage{
 		defaultAdminUser.setType(UserType.Admin);
 		users = new ArrayList<User>(Arrays.asList(defaultAdminUser));
 		onlineUsers = new ArrayList<User>();
-		tests = new ArrayList<Test>();
+		Test sampleTest = new SimpleTest("Test", "Sample test", new ArrayList<Question>());
+		tests = new ArrayList<Test>(Arrays.asList(sampleTest));
 		anonymousUsersAllowed = false;
 	}
 
