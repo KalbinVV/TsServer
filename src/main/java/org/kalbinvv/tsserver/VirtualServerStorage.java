@@ -1,18 +1,15 @@
 package org.kalbinvv.tsserver;
 
 import java.time.LocalDateTime;
+
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
-import org.kalbinvv.tscore.test.Question;
-import org.kalbinvv.tscore.test.QuestionType;
-import org.kalbinvv.tscore.test.SimpleQuestion;
-import org.kalbinvv.tscore.test.SimpleTest;
 import org.kalbinvv.tscore.test.Test;
 import org.kalbinvv.tscore.user.User;
 import org.kalbinvv.tscore.user.UserEntry;
@@ -24,18 +21,17 @@ public class VirtualServerStorage implements ServerStorage{
 	private List<User> onlineUsers;
 	private List<Test> tests;
 	private List<String> logs;
+	private HashMap<Integer, List<List<String>>> testsAnswers;
 	private boolean anonymousUsersAllowed;
 
 	public VirtualServerStorage() {
 		User defaultAdminUser = new User("admin", "admin");
 		defaultAdminUser.setType(UserType.Admin);
-		users = new ArrayList<User>(Arrays.asList(defaultAdminUser));
+		users = new ArrayList<User>();
 		onlineUsers = new ArrayList<User>();
-		Test sampleTest = new SimpleTest("Test", "Sample test", new ArrayList<Question>(
-				Arrays.asList(new SimpleQuestion("Тестовый вопрос", QuestionType.CheckBoxes,null))
-				));
-		tests = new ArrayList<Test>(Arrays.asList(sampleTest));
+		tests = new ArrayList<Test>();
 		logs = new ArrayList<String>();
+		testsAnswers = new HashMap<Integer, List<List<String>>>();
 		anonymousUsersAllowed = false;
 	}
 
@@ -127,10 +123,27 @@ public class VirtualServerStorage implements ServerStorage{
 		System.out.println(logMessage);
 		logs.add(logMessage);
 	}
+	
 
 	@Override
 	public List<String> getLogs() {
 		return logs;
+	}
+
+	@Override
+	public void addTest(Test test) {
+		tests.add(test);
+		
+	}
+	
+	@Override
+	public void setAnswers(Integer testID, List<List<String>> answers) {
+		testsAnswers.put(testID, answers);
+	}
+
+	@Override
+	public List<List<String>> getAnswers(Integer testID) {
+		return testsAnswers.get(testID);
 	}
 
 }

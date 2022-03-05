@@ -18,7 +18,10 @@ public interface ServerStorage {
 	public boolean isUserExist(UserEntry user);
 	public List<User> getUsers();
 	public List<User> getOnlineUsers();
+	public void addTest(Test test);
 	public List<Test> getTests();
+	public void setAnswers(Integer testID, List<List<String>> answers);
+	public List<List<String>> getAnswers(Integer testID);
 	public void addLog(User user, String log);
 	public List<String> getLogs();
 	
