@@ -25,11 +25,14 @@ public class ServerHandler {
 		registerEvent(RequestType.UserExit, new OnQuitEvent());
 		registerEvent(RequestType.AddUser, new OnUserAddEvent());
 		registerEvent(RequestType.AddAdminUser, new OnAdminAddEvent());
-		registerEvent(RequestType.GetOnlineUsersList, new OnGetOnlinePlayersEvent());
+		registerEvent(RequestType.GetOnlineUsers, new OnGetOnlinePlayersEvent());
 		registerEvent(RequestType.GetAnonymousUsersAllowedSetting, new OnViewUsersAllowedSetting());
-		registerEvent(RequestType.ChangesAnonymousUsersAllowedSetting, new OnChangeUsersAllowedSetting());
-		registerEvent(RequestType.GetTestsList, new OnGetTestsEvent());
+		registerEvent(RequestType.ChangesAnonymousUsersAllowedSetting, 
+				new OnChangeUsersAllowedSetting());
+		registerEvent(RequestType.GetTests, new OnGetTestsEvent());
 		registerEvent(RequestType.GetLogs, new OnGetLogsEvent());
+		registerEvent(RequestType.CompleteTest, new OnCompleteTestEvent());
+		registerEvent(RequestType.GetTestsResults, new OnGetTestsResultsEvent());
 	}
 
 

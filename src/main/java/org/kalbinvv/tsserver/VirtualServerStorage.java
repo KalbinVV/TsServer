@@ -11,6 +11,7 @@ import java.util.List;
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.test.Test;
+import org.kalbinvv.tscore.test.TestResult;
 import org.kalbinvv.tscore.user.User;
 import org.kalbinvv.tscore.user.UserEntry;
 import org.kalbinvv.tscore.user.UserType;
@@ -21,6 +22,7 @@ public class VirtualServerStorage implements ServerStorage{
 	private List<User> onlineUsers;
 	private List<Test> tests;
 	private List<String> logs;
+	private List<TestResult> testsResults;
 	private HashMap<Integer, List<List<String>>> testsAnswers;
 	private boolean anonymousUsersAllowed;
 
@@ -31,6 +33,7 @@ public class VirtualServerStorage implements ServerStorage{
 		onlineUsers = new ArrayList<User>();
 		tests = new ArrayList<Test>();
 		logs = new ArrayList<String>();
+		testsResults = new ArrayList<TestResult>();
 		testsAnswers = new HashMap<Integer, List<List<String>>>();
 		anonymousUsersAllowed = false;
 	}
@@ -119,11 +122,11 @@ public class VirtualServerStorage implements ServerStorage{
 	public void addLog(User user, String log) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		String logMessage = "(" + dtf.format(LocalDateTime.now()) 
-			+ ") [" + user.getStringRepresentation() + "] " + log;
+		+ ") [" + user.getStringRepresentation() + "] " + log;
 		System.out.println(logMessage);
 		logs.add(logMessage);
 	}
-	
+
 
 	@Override
 	public List<String> getLogs() {
@@ -133,9 +136,9 @@ public class VirtualServerStorage implements ServerStorage{
 	@Override
 	public void addTest(Test test) {
 		tests.add(test);
-		
+
 	}
-	
+
 	@Override
 	public void setAnswers(Integer testID, List<List<String>> answers) {
 		testsAnswers.put(testID, answers);
@@ -144,6 +147,16 @@ public class VirtualServerStorage implements ServerStorage{
 	@Override
 	public List<List<String>> getAnswers(Integer testID) {
 		return testsAnswers.get(testID);
+	}
+
+	@Override
+	public void addTestResult(TestResult testResult) {
+		testsResults.add(testResult);
+	}
+
+	@Override
+	public List<TestResult> getTestsResults() {
+		return testsResults;
 	}
 
 }
