@@ -19,5 +19,7 @@ public interface ServerStorage {
 	public List<User> getUsers();
 	public List<User> getOnlineUsers();
 	public List<Test> getTests();
+	public void addLog(User user, String log);
+	public List<String> getLogs();
 	
 }

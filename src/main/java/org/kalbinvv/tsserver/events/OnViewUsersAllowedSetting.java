@@ -6,6 +6,7 @@ import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.user.User;
 import org.kalbinvv.tscore.user.UserType;
+import org.kalbinvv.tsserver.ServerStorage;
 import org.kalbinvv.tsserver.TestingSystemServer;
 
 public class OnViewUsersAllowedSetting implements ServerEvent{
@@ -13,16 +14,15 @@ public class OnViewUsersAllowedSetting implements ServerEvent{
 	@Override
 	public Response handle(Request request, Connection connection) {
 		User user = (User) request.from();
-		Response response = null;
-		if(user.getType() == UserType.Admin) {
-			response = new Response(ResponseType.Successful, TestingSystemServer.getServerHandler()
-					.getServerStorage().isAnonymousUsersAllowed());
-			System.out.println(user.getName() + " " + user.getAddress().toString() 
-					+ " view anonymous users allowed setting!");
-		}else {
-			response = new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
+		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
+		if(user.getType() != UserType.Admin) {
+			serverStorage.addLog(user, 
+					"Неудачная попытка получения настройки авторизации для анонимных пользователей: " 
+					+ "Недостаточно прав");
+			return new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
 		}
-		return response;
+		serverStorage.addLog(user, "Получение настройки авторизации для анонимных пользователей");
+		return new Response(ResponseType.Successful, serverStorage.isAnonymousUsersAllowed());
 	}
 
 }

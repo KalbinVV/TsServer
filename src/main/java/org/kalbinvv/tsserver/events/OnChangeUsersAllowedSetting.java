@@ -14,17 +14,15 @@ public class OnChangeUsersAllowedSetting implements ServerEvent{
 	@Override
 	public Response handle(Request request, Connection connection) {
 		User user = (User) request.from();
-		Response response = null;
-		if(user.getType() == UserType.Admin) {
-			response = new Response(ResponseType.Successful);
-			System.out.println(user.getName() + " " + user.getAddress().toString() 
-					+ " changes anonymous users allowed setting!");
-			ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
-			serverStorage.setAnonymousUsersAllowed(!serverStorage.isAnonymousUsersAllowed());
-		}else {
-			response = new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
+		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
+		if(user.getType() != UserType.Admin) {
+			serverStorage.addLog(user, 
+					"Неудачная попытка изменения настройки авторизации для анонимных пользователей");
+			return new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
 		}
-		return response;
+		serverStorage.addLog(user, "Изменение настройки авторизации для анонимных пользователей");
+		serverStorage.setAnonymousUsersAllowed(!serverStorage.isAnonymousUsersAllowed());
+		return new Response(ResponseType.Successful);
 	}
 
 }

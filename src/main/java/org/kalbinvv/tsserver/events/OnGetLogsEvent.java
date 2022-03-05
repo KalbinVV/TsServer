@@ -9,20 +9,19 @@ import org.kalbinvv.tscore.user.UserType;
 import org.kalbinvv.tsserver.ServerStorage;
 import org.kalbinvv.tsserver.TestingSystemServer;
 
-public class OnGetOnlinePlayersEvent implements ServerEvent{
+public class OnGetLogsEvent implements ServerEvent{
 
 	@Override
 	public Response handle(Request request, Connection connection) {
-		User user = (User) request.from();
 		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
+		User user = request.from();
 		if(user.getType() != UserType.Admin) {
-			serverStorage.addLog(user, 
-					"Неудачная попытка получить список пользователей: Недостаточно прав");
+			serverStorage.addLog(user, "Неудачная попытка получить журнал действий: Недостаточно прав");
 			return new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
 		}
-		serverStorage.addLog(user, "Получение списка пользователей");
-		return new Response(ResponseType.Successful, TestingSystemServer.getServerHandler()
-				.getServerStorage().getOnlineUsers());
+		serverStorage.addLog(user, "Получение журнала действий");
+		return new Response(ResponseType.Successful, TestingSystemServer.
+				getServerHandler().getServerStorage().getLogs());
 	}
 
 }

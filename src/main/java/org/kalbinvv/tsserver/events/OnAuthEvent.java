@@ -6,6 +6,7 @@ import org.kalbinvv.tscore.net.RequestType;
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.user.User;
+import org.kalbinvv.tsserver.ServerStorage;
 import org.kalbinvv.tsserver.TestingSystemServer;
 
 public class OnAuthEvent implements ServerEvent{
@@ -13,17 +14,15 @@ public class OnAuthEvent implements ServerEvent{
 	@Override
 	public Response handle(Request request, Connection connection) {
 		Response response = null;
+		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
 		if(request.getType() == RequestType.UserConnect) {
 			User user = (User) request.getObject();
-			System.out.println("Trying to connect: " 
-					+ user.getName() + " " + user.getAddress().toString());
-			response = TestingSystemServer.getServerHandler().getServerStorage().authUser(user);
+			serverStorage.addLog(user, "Попытка входа");
+			response = serverStorage.authUser(user);
 			if(response.getType() == ResponseType.Successful) {
-				System.out.println("Succesful connect: " + 
-						user.getName() + " " + user.getAddress().toString());
+				serverStorage.addLog(user, "Удачная авторизация");
 			}else {
-				System.out.println("Unsuccesful connect: " 
-						+ user.getName() + " " + user.getAddress().toString());
+				serverStorage.addLog(user, "Неудачная авторизация: " + (String) response.getObject());
 			}
 		}
 		return response;

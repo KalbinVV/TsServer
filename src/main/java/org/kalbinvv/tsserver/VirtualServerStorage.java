@@ -1,5 +1,7 @@
 package org.kalbinvv.tsserver;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import java.util.Arrays;
@@ -8,6 +10,8 @@ import java.util.List;
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.test.Question;
+import org.kalbinvv.tscore.test.QuestionType;
+import org.kalbinvv.tscore.test.SimpleQuestion;
 import org.kalbinvv.tscore.test.SimpleTest;
 import org.kalbinvv.tscore.test.Test;
 import org.kalbinvv.tscore.user.User;
@@ -19,6 +23,7 @@ public class VirtualServerStorage implements ServerStorage{
 	private List<User> users;
 	private List<User> onlineUsers;
 	private List<Test> tests;
+	private List<String> logs;
 	private boolean anonymousUsersAllowed;
 
 	public VirtualServerStorage() {
@@ -26,8 +31,11 @@ public class VirtualServerStorage implements ServerStorage{
 		defaultAdminUser.setType(UserType.Admin);
 		users = new ArrayList<User>(Arrays.asList(defaultAdminUser));
 		onlineUsers = new ArrayList<User>();
-		Test sampleTest = new SimpleTest("Test", "Sample test", new ArrayList<Question>());
+		Test sampleTest = new SimpleTest("Test", "Sample test", new ArrayList<Question>(
+				Arrays.asList(new SimpleQuestion("Тестовый вопрос", QuestionType.CheckBoxes,null))
+				));
 		tests = new ArrayList<Test>(Arrays.asList(sampleTest));
+		logs = new ArrayList<String>();
 		anonymousUsersAllowed = false;
 	}
 
@@ -109,6 +117,20 @@ public class VirtualServerStorage implements ServerStorage{
 	@Override
 	public List<Test> getTests() {
 		return tests;
+	}
+
+	@Override
+	public void addLog(User user, String log) {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+		String logMessage = "(" + dtf.format(LocalDateTime.now()) 
+			+ ") [" + user.getStringRepresentation() + "] " + log;
+		System.out.println(logMessage);
+		logs.add(logMessage);
+	}
+
+	@Override
+	public List<String> getLogs() {
+		return logs;
 	}
 
 }

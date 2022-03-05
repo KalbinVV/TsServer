@@ -19,28 +19,23 @@ public class OnAdminAddEvent implements ServerEvent{
 		user.setType(UserType.Admin);
 		return addUser(request, user);
 	}
-	
+
 	private Response addUser(Request request, User user) {
 		UserEntry userEntry = (UserEntry) request.getObject();
-		Response response = null;
 		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
 		if(serverStorage.isUserExist(userEntry)) {
-			response = new Response(ResponseType.Unsuccessful, "Пользователь уже существует!");
-		}else {
-			if(request.from().getType() == UserType.Admin) {
-				serverStorage.addUser(user);
-				System.out.println("User added: " + userEntry.name + "\nFrom: "
-						+ request.from().getName() + " "
-						+ request.from().getAddress().toString());
-				response = new Response(ResponseType.Successful);
-			}else {
-				System.out.println("Failed user add: " + userEntry.name + "\nFrom: "
-						+ request.from().getName() + " " 
-						+ request.from().getAddress().toString());
-				response = new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
-			}
+			serverStorage.addLog(request.from(), "Неудачная попытка создания администратора " + userEntry.name
+					+ ": Пользователь уже существует!");
+			return new Response(ResponseType.Unsuccessful, "Пользователь уже существует!");
 		}
-		return response;
+		if(request.from().getType() != UserType.Admin) {
+			serverStorage.addLog(request.from(), "Неудачная попытка создания администратора " + userEntry.name
+					+ ": Недостаточно прав!");
+			return new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
+		}
+		serverStorage.addUser(user);
+		serverStorage.addLog(request.from(), "Создание администратора " + userEntry.name);
+		return new Response(ResponseType.Successful);
 	}
 
 }
