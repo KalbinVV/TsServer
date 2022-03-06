@@ -11,7 +11,7 @@ import org.kalbinvv.tscore.user.UserType;
 import org.kalbinvv.tsserver.ServerStorage;
 import org.kalbinvv.tsserver.TestingSystemServer;
 
-public class onAddTestEvent implements ServerEvent{
+public class OnAddTestEvent implements ServerEvent{
 
 	@Override
 	public Response handle(Request request, Connection connection) {
