@@ -7,6 +7,7 @@ import org.kalbinvv.tscore.net.Request;
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.test.Question;
+import org.kalbinvv.tscore.test.QuestionType;
 import org.kalbinvv.tscore.test.Test;
 import org.kalbinvv.tscore.test.TestResult;
 import org.kalbinvv.tscore.user.User;
@@ -20,7 +21,7 @@ public class OnCompleteTestEvent implements ServerEvent{
 		User user = request.from();
 		Test test = user.getTest();
 		List<List<String>> correctAnswers = TestingSystemServer.getServerHandler()
-				.getServerStorage().getAnswers(test.getID());
+				.getServerStorage().getAnswers(test);
 		int questionIndex = 0;
 		int numberOfCorrectAnswers = 0;
 		int numberOfAnswers = 0;
@@ -29,12 +30,20 @@ public class OnCompleteTestEvent implements ServerEvent{
 				for(String correctAnswer : correctAnswers.get(questionIndex)) {
 					if(userSelect.equals(correctAnswer)) {
 						numberOfCorrectAnswers++;
+						break;
 					}
 				}
 			}
+			questionIndex++;
 		}
+		int answerIndex = 0;
 		for(List<String> answers : correctAnswers) {
-			numberOfAnswers += answers.size();
+			if(test.getQuestions().get(answerIndex).getType() == QuestionType.TextFields) {
+				numberOfAnswers++;
+			}else {
+				numberOfAnswers += answers.size();
+			}
+			answerIndex++;
 		}
 		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
 		TestResult testResult = new TestResult(numberOfAnswers, 

@@ -29,6 +29,7 @@ public class ServerHandler {
 		registerEvent(RequestType.GetAnonymousUsersAllowedSetting, new OnViewUsersAllowedSetting());
 		registerEvent(RequestType.ChangesAnonymousUsersAllowedSetting, 
 				new OnChangeUsersAllowedSetting());
+		registerEvent(RequestType.AddTest, new onAddTestEvent());
 		registerEvent(RequestType.GetTests, new OnGetTestsEvent());
 		registerEvent(RequestType.GetLogs, new OnGetLogsEvent());
 		registerEvent(RequestType.CompleteTest, new OnCompleteTestEvent());

@@ -21,8 +21,8 @@ public interface ServerStorage {
 	public List<User> getOnlineUsers();
 	public void addTest(Test test);
 	public List<Test> getTests();
-	public void setAnswers(Integer testID, List<List<String>> answers);
-	public List<List<String>> getAnswers(Integer testID);
+	public void setAnswers(Test test, List<List<String>> answers);
+	public List<List<String>> getAnswers(Test test);
 	public void addLog(User user, String log);
 	public List<String> getLogs();
 	public void addTestResult(TestResult testResult);

@@ -23,7 +23,7 @@ public class VirtualServerStorage implements ServerStorage{
 	private List<Test> tests;
 	private List<String> logs;
 	private List<TestResult> testsResults;
-	private HashMap<Integer, List<List<String>>> testsAnswers;
+	private HashMap<Test, List<List<String>>> testsAnswers;
 	private boolean anonymousUsersAllowed;
 
 	public VirtualServerStorage() {
@@ -34,7 +34,7 @@ public class VirtualServerStorage implements ServerStorage{
 		tests = new ArrayList<Test>();
 		logs = new ArrayList<String>();
 		testsResults = new ArrayList<TestResult>();
-		testsAnswers = new HashMap<Integer, List<List<String>>>();
+		testsAnswers = new HashMap<Test, List<List<String>>>();
 		anonymousUsersAllowed = false;
 	}
 
@@ -140,13 +140,18 @@ public class VirtualServerStorage implements ServerStorage{
 	}
 
 	@Override
-	public void setAnswers(Integer testID, List<List<String>> answers) {
-		testsAnswers.put(testID, answers);
+	public void setAnswers(Test test, List<List<String>> answers) {
+		testsAnswers.put(test, answers);
 	}
 
 	@Override
-	public List<List<String>> getAnswers(Integer testID) {
-		return testsAnswers.get(testID);
+	public List<List<String>> getAnswers(Test test) {
+		for(Test tst : tests) {
+			if(tst.getName().equals(test.getName())) {
+				return testsAnswers.get(tst);
+			}
+		}
+		return null;
 	}
 
 	@Override
