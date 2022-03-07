@@ -96,7 +96,7 @@ public class VirtualServerStorage implements ServerStorage{
 		for(User userNode : users) {
 			UserEntry userEntry = userNode.toEntry();
 			if(userEntry.name.equals(user.name) 
-					&& userEntry.pass.equals(user)) {
+					&& userEntry.pass.equals(user.pass)) {
 				return true;
 			}
 		}

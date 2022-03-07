@@ -34,6 +34,7 @@ public class ServerHandler {
 		registerEvent(RequestType.GetLogs, new OnGetLogsEvent());
 		registerEvent(RequestType.CompleteTest, new OnCompleteTestEvent());
 		registerEvent(RequestType.GetTestsResults, new OnGetTestsResultsEvent());
+		registerEvent(RequestType.GetTestData, new OnGetTestDataEvent());
 	}
 
 
