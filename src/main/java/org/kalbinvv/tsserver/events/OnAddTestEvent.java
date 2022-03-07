@@ -22,6 +22,12 @@ public class OnAddTestEvent implements ServerEvent{
 		TestData testData = (TestData) request.getObject();
 		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
 		Test test = testData.getTest();
+		for(Test tst : serverStorage.getTests()) {
+			if(tst.getName().equals(test.getName())) {
+				return new Response(ResponseType.Unsuccessful, 
+						"Тест с таким названием уже есть на сервере!");
+			}
+		}
 		serverStorage.addTest(test);
 		serverStorage.setAnswers(test, testData.getAnswers());
 		serverStorage.addLog(user, "Добавил новый тест '" + test.getName() + "'");
