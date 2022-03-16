@@ -6,7 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
@@ -18,8 +20,8 @@ import org.kalbinvv.tscore.user.UserType;
 
 public class VirtualServerStorage implements ServerStorage{
 
-	private List<User> users;
-	private List<User> onlineUsers;
+	private HashSet<User> users;
+	private HashSet<User> onlineUsers;
 	private List<Test> tests;
 	private List<String> logs;
 	private List<TestResult> testsResults;
@@ -29,8 +31,8 @@ public class VirtualServerStorage implements ServerStorage{
 	public VirtualServerStorage() {
 		User defaultAdminUser = new User("admin", "admin");
 		defaultAdminUser.setType(UserType.Admin);
-		users = new ArrayList<User>();
-		onlineUsers = new ArrayList<User>();
+		users = new HashSet<User>();
+		onlineUsers = new HashSet<User>();
 		tests = new ArrayList<Test>();
 		logs = new ArrayList<String>();
 		testsResults = new ArrayList<TestResult>();
@@ -104,12 +106,12 @@ public class VirtualServerStorage implements ServerStorage{
 	}
 
 	@Override
-	public List<User> getUsers() {
+	public Set<User> getUsers() {
 		return users;
 	}
 
 	@Override
-	public List<User> getOnlineUsers() {
+	public Set<User> getOnlineUsers() {
 		return onlineUsers;
 	}
 
@@ -136,7 +138,13 @@ public class VirtualServerStorage implements ServerStorage{
 	@Override
 	public void addTest(Test test) {
 		tests.add(test);
-
+	}
+	
+	@Override
+	public void removeTest(Test test) {
+		tests.removeIf((Test tst) -> {
+			return tst.getName().equals(test.getName());
+		});
 	}
 
 	@Override
@@ -162,6 +170,18 @@ public class VirtualServerStorage implements ServerStorage{
 	@Override
 	public List<TestResult> getTestsResults() {
 		return testsResults;
+	}
+
+	@Override
+	public boolean isAdminUser(User user) {
+		UserEntry userEntry = user.toEntry();
+		for(User u : users) {
+			UserEntry entry = u.toEntry();
+			if(entry.name.equals(userEntry.name) && entry.pass.equals(userEntry.pass)) {
+				return user.getType() == UserType.Admin ? true : false;
+			}
+		}
+		return false;
 	}
 
 }

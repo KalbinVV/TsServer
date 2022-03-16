@@ -6,7 +6,6 @@ import org.kalbinvv.tscore.net.Connection;
 import org.kalbinvv.tscore.net.Request;
 import org.kalbinvv.tscore.net.RequestType;
 import org.kalbinvv.tscore.net.Response;
-import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tsserver.events.*;
 
 public class ServerHandler {
@@ -35,19 +34,13 @@ public class ServerHandler {
 		registerEvent(RequestType.CompleteTest, new OnCompleteTestEvent());
 		registerEvent(RequestType.GetTestsResults, new OnGetTestsResultsEvent());
 		registerEvent(RequestType.GetTestData, new OnGetTestDataEvent());
+		registerEvent(RequestType.RemoveTest, new OnRemoveTestEvent());
 	}
 
 
 	public Response handleRequest(Connection connection) {
 		Request request = connection.getRequest();
-		Response response = null;
-		if(events.containsKey(request.getType())) {
-			response = events.get(request.getType()).handle(request, connection);
-		}else {
-			System.out.println("Undefined request!");
-			response = new Response(ResponseType.Unsuccessful, "Неизвестная операция!");
-		}
-		return response;
+		return events.get(request.getType()).handle(request, connection);
 	}
 
 

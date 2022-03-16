@@ -5,7 +5,6 @@ import org.kalbinvv.tscore.net.Request;
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.user.User;
-import org.kalbinvv.tscore.user.UserType;
 import org.kalbinvv.tsserver.ServerStorage;
 import org.kalbinvv.tsserver.TestingSystemServer;
 
@@ -15,7 +14,7 @@ public class OnGetOnlinePlayersEvent implements ServerEvent{
 	public Response handle(Request request, Connection connection) {
 		User user = (User) request.from();
 		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
-		if(user.getType() != UserType.Admin) {
+		if(!serverStorage.isAdminUser(user)) {
 			serverStorage.addLog(user, 
 					"Неудачная попытка получить список пользователей: Недостаточно прав");
 			return new Response(ResponseType.Unsuccessful, "Недостаточно прав!");

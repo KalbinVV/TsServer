@@ -23,12 +23,13 @@ public class OnAdminAddEvent implements ServerEvent{
 	private Response addUser(Request request, User user) {
 		UserEntry userEntry = (UserEntry) request.getObject();
 		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
+		
 		if(serverStorage.isUserExist(userEntry)) {
 			serverStorage.addLog(request.from(), "Неудачная попытка создания администратора " + userEntry.name
 					+ ": Пользователь уже существует!");
 			return new Response(ResponseType.Unsuccessful, "Пользователь уже существует!");
 		}
-		if(request.from().getType() != UserType.Admin) {
+		if(!serverStorage.isAdminUser(request.from())) {
 			serverStorage.addLog(request.from(), "Неудачная попытка создания администратора " + userEntry.name
 					+ ": Недостаточно прав!");
 			return new Response(ResponseType.Unsuccessful, "Недостаточно прав!");

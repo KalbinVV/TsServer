@@ -1,6 +1,7 @@
 package org.kalbinvv.tsserver;
 
 import java.util.List;
+import java.util.Set;
 
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.test.Test;
@@ -17,9 +18,10 @@ public interface ServerStorage {
 	public void setAnonymousUsersAllowed(boolean anonymousUsersAllowed);
 	public void removeUserFromOnline(User user);
 	public boolean isUserExist(UserEntry user);
-	public List<User> getUsers();
-	public List<User> getOnlineUsers();
+	public Set<User> getUsers();
+	public Set<User> getOnlineUsers();
 	public void addTest(Test test);
+	public void removeTest(Test test);
 	public List<Test> getTests();
 	public void setAnswers(Test test, List<List<String>> answers);
 	public List<List<String>> getAnswers(Test test);
@@ -27,5 +29,6 @@ public interface ServerStorage {
 	public List<String> getLogs();
 	public void addTestResult(TestResult testResult);
 	public List<TestResult> getTestsResults();
+	public boolean isAdminUser(User user);
 	
 }

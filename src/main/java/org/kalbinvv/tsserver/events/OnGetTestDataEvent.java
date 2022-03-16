@@ -7,7 +7,6 @@ import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.test.Test;
 import org.kalbinvv.tscore.test.TestData;
 import org.kalbinvv.tscore.user.User;
-import org.kalbinvv.tscore.user.UserType;
 import org.kalbinvv.tsserver.ServerStorage;
 import org.kalbinvv.tsserver.TestingSystemServer;
 
@@ -16,11 +15,11 @@ public class OnGetTestDataEvent implements ServerEvent{
 	@Override
 	public Response handle(Request request, Connection connection) {
 		User user = request.from();
-		if(user.getType() != UserType.Admin) {
+		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
+		if(!serverStorage.isAdminUser(user)) {
 			return new Response(ResponseType.Unsuccessful, "Недостаточно прав");
 		}
 		Test test = (Test) request.getObject();
-		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
 		TestData testData = new TestData(test, serverStorage.getAnswers(test));
 		return new Response(ResponseType.Successful, testData);
 	}

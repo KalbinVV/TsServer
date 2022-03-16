@@ -6,7 +6,6 @@ import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.user.User;
 import org.kalbinvv.tscore.user.UserEntry;
-import org.kalbinvv.tscore.user.UserType;
 import org.kalbinvv.tsserver.ServerStorage;
 import org.kalbinvv.tsserver.TestingSystemServer;
 
@@ -26,7 +25,7 @@ public class OnUserAddEvent implements ServerEvent{
 					+ ": Пользователь уже существует!");
 			return new Response(ResponseType.Unsuccessful, "Пользователь уже существует!");
 		}
-		if(request.from().getType() != UserType.Admin) {
+		if(!serverStorage.isAdminUser(user)) {
 			serverStorage.addLog(request.from(), "Неудачная попытка создания пользователя " + userEntry.name
 					+ ": Недостаточно прав!");
 			return new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
