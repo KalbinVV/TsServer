@@ -21,6 +21,7 @@ public class OnRemoveTestEvent implements ServerEvent {
 		}
 		Test test = (Test) request.getObject();
 		serverStorage.removeTest(test);
+		serverStorage.removeAnswers(test);
 		serverStorage.addLog(user, "Удалил тест " + test.getName());
 		return new Response(ResponseType.Successful);
 	}

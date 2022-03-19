@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
+import org.kalbinvv.tscore.security.Utils;
 import org.kalbinvv.tscore.test.Test;
 import org.kalbinvv.tscore.test.TestResult;
 import org.kalbinvv.tscore.user.User;
@@ -29,9 +30,9 @@ public class VirtualServerStorage implements ServerStorage{
 	private boolean anonymousUsersAllowed;
 
 	public VirtualServerStorage() {
-		User defaultAdminUser = new User("admin", "admin");
+		User defaultAdminUser = new User("admin", Utils.convertToSHA256("admin"));
 		defaultAdminUser.setType(UserType.Admin);
-		users = new HashSet<User>();
+		users = new HashSet<User>(Arrays.asList(defaultAdminUser));
 		onlineUsers = new HashSet<User>();
 		tests = new ArrayList<Test>();
 		logs = new ArrayList<String>();
@@ -152,6 +153,13 @@ public class VirtualServerStorage implements ServerStorage{
 		testsAnswers.put(test, answers);
 	}
 
+	@Override
+	public void removeAnswers(Test test) {
+		testsAnswers.keySet().removeIf((Test tst) -> {
+			return tst.getName().equals(test.getName());
+		});
+	}
+	
 	@Override
 	public List<List<String>> getAnswers(Test test) {
 		for(Test tst : tests) {

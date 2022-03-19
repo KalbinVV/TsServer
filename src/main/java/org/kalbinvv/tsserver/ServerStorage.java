@@ -24,6 +24,7 @@ public interface ServerStorage {
 	public void removeTest(Test test);
 	public List<Test> getTests();
 	public void setAnswers(Test test, List<List<String>> answers);
+	public void removeAnswers(Test test);
 	public List<List<String>> getAnswers(Test test);
 	public void addLog(User user, String log);
 	public List<String> getLogs();

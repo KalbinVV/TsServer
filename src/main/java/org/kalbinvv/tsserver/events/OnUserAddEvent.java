@@ -25,8 +25,9 @@ public class OnUserAddEvent implements ServerEvent{
 					+ ": Пользователь уже существует!");
 			return new Response(ResponseType.Unsuccessful, "Пользователь уже существует!");
 		}
-		if(!serverStorage.isAdminUser(user)) {
-			serverStorage.addLog(request.from(), "Неудачная попытка создания пользователя " + userEntry.name
+		if(!serverStorage.isAdminUser(request.from())) {
+			serverStorage.addLog(request.from(), "Неудачная попытка создания пользователя " 
+					+ userEntry.name
 					+ ": Недостаточно прав!");
 			return new Response(ResponseType.Unsuccessful, "Недостаточно прав!");
 		}
