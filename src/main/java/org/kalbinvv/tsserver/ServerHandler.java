@@ -1,6 +1,7 @@
 package org.kalbinvv.tsserver;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.kalbinvv.tsserver.storage.FilesLogsStorage;
 import org.kalbinvv.tsserver.storage.ServerStorage;
@@ -18,7 +19,7 @@ import org.kalbinvv.tsserver.events.*;
 public class ServerHandler {
 
 	private ServerStorage serverStorage;
-	private HashMap<RequestType, ServerEvent> events;
+	private Map<RequestType, ServerEvent> events;
 
 	public ServerHandler() {
 		serverStorage = new ServerStorage(new VirtualUsersStorage(),
