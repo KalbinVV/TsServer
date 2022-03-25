@@ -1,9 +1,9 @@
-package org.kalbinvv.storage;
+package org.kalbinvv.tsserver.storage;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.kalbinvv.storage.interfaces.UsersStorage;
+import org.kalbinvv.tsserver.storage.interfaces.UsersStorage;
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.user.User;

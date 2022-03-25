@@ -2,10 +2,10 @@ package org.kalbinvv.tsserver;
 
 import java.util.HashMap;
 
-import org.kalbinvv.storage.FilesLogsStorage;
-import org.kalbinvv.storage.ServerStorage;
-import org.kalbinvv.storage.VirtualTestsStorage;
-import org.kalbinvv.storage.VirtualUsersStorage;
+import org.kalbinvv.tsserver.storage.FilesLogsStorage;
+import org.kalbinvv.tsserver.storage.ServerStorage;
+import org.kalbinvv.tsserver.storage.VirtualTestsStorage;
+import org.kalbinvv.tsserver.storage.VirtualUsersStorage;
 import org.kalbinvv.tscore.net.Connection;
 import org.kalbinvv.tscore.net.Request;
 import org.kalbinvv.tscore.net.RequestType;

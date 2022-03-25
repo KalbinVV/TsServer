@@ -1,4 +1,4 @@
-package org.kalbinvv.storage.interfaces;
+package org.kalbinvv.tsserver.storage.interfaces;
 
 import java.util.Set;
 

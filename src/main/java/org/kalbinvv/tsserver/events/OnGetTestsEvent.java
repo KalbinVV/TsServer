@@ -1,6 +1,6 @@
 package org.kalbinvv.tsserver.events;
 
-import org.kalbinvv.storage.ServerStorage;
+import org.kalbinvv.tsserver.storage.ServerStorage;
 import org.kalbinvv.tscore.net.Connection;
 import org.kalbinvv.tscore.net.Request;
 import org.kalbinvv.tscore.net.Response;

@@ -1,4 +1,4 @@
-package org.kalbinvv.storage;
+package org.kalbinvv.tsserver.storage;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.kalbinvv.storage.interfaces.LogsStorage;
+import org.kalbinvv.tsserver.storage.interfaces.LogsStorage;
 import org.kalbinvv.tscore.user.User;
 
 public class FilesLogsStorage implements LogsStorage{

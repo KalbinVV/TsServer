@@ -2,8 +2,8 @@ package org.kalbinvv.tsserver.events;
 
 import java.util.List;
 
-import org.kalbinvv.storage.ServerStorage;
-import org.kalbinvv.storage.interfaces.TestsStorage;
+import org.kalbinvv.tsserver.storage.ServerStorage;
+import org.kalbinvv.tsserver.storage.interfaces.TestsStorage;
 import org.kalbinvv.tscore.net.Connection;
 import org.kalbinvv.tscore.net.Request;
 import org.kalbinvv.tscore.net.Response;

@@ -1,11 +1,11 @@
-package org.kalbinvv.storage;
+package org.kalbinvv.tsserver.storage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kalbinvv.storage.interfaces.TestsStorage;
+import org.kalbinvv.tsserver.storage.interfaces.TestsStorage;
 import org.kalbinvv.tscore.test.Test;
 import org.kalbinvv.tscore.test.TestResult;
 

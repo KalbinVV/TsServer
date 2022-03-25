@@ -1,8 +1,8 @@
-package org.kalbinvv.storage;
+package org.kalbinvv.tsserver.storage;
 
-import org.kalbinvv.storage.interfaces.LogsStorage;
-import org.kalbinvv.storage.interfaces.TestsStorage;
-import org.kalbinvv.storage.interfaces.UsersStorage;
+import org.kalbinvv.tsserver.storage.interfaces.LogsStorage;
+import org.kalbinvv.tsserver.storage.interfaces.TestsStorage;
+import org.kalbinvv.tsserver.storage.interfaces.UsersStorage;
 
 public class ServerStorage{
 	
