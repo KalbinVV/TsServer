@@ -42,5 +42,5 @@ public class OnAdminAddEvent implements ServerEvent{
 		logsStorage.addLog(request.from(), "Создание администратора " + userEntry.name);
 		return new Response(ResponseType.Successful);
 	}
-
+	
 }

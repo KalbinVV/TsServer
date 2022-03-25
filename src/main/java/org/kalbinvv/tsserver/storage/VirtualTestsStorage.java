@@ -13,12 +13,12 @@ public class VirtualTestsStorage implements TestsStorage{
 	
 	private final List<Test> tests;
 	private final List<TestResult> testsResults;
-	private final Map<Test, List<List<String>>> testsAnswers;
+	private final Map<String, List<List<String>>> testsAnswers;
 
 	public VirtualTestsStorage() {
 		tests = new ArrayList<Test>();
 		testsResults = new ArrayList<TestResult>();
-		testsAnswers = new HashMap<Test, List<List<String>>>();
+		testsAnswers = new HashMap<String, List<List<String>>>();
 	}
 	
 	@Override
@@ -40,13 +40,13 @@ public class VirtualTestsStorage implements TestsStorage{
 
 	@Override
 	public void setAnswers(Test test, List<List<String>> answers) {
-		testsAnswers.put(test, answers);
+		testsAnswers.put(test.getName(), answers);
 	}
 
 	@Override
 	public void removeAnswers(Test test) {
-		testsAnswers.keySet().removeIf((Test tst) -> {
-			return tst.getName().equals(test.getName());
+		testsAnswers.keySet().removeIf((String testName) -> {
+			return testName.equals(test.getName());
 		});
 	}
 	
@@ -54,7 +54,7 @@ public class VirtualTestsStorage implements TestsStorage{
 	public List<List<String>> getAnswers(Test test) {
 		for(Test tst : tests) {
 			if(tst.getName().equals(test.getName())) {
-				return testsAnswers.get(tst);
+				return testsAnswers.get(tst.getName());
 			}
 		}
 		return null;
