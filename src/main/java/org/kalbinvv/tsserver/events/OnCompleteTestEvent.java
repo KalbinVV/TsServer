@@ -2,6 +2,8 @@ package org.kalbinvv.tsserver.events;
 
 import java.util.List;
 
+import org.kalbinvv.storage.ServerStorage;
+import org.kalbinvv.storage.interfaces.TestsStorage;
 import org.kalbinvv.tscore.net.Connection;
 import org.kalbinvv.tscore.net.Request;
 import org.kalbinvv.tscore.net.Response;
@@ -11,7 +13,6 @@ import org.kalbinvv.tscore.test.QuestionType;
 import org.kalbinvv.tscore.test.Test;
 import org.kalbinvv.tscore.test.TestResult;
 import org.kalbinvv.tscore.user.User;
-import org.kalbinvv.tsserver.ServerStorage;
 import org.kalbinvv.tsserver.TestingSystemServer;
 
 public class OnCompleteTestEvent implements ServerEvent{
@@ -20,8 +21,10 @@ public class OnCompleteTestEvent implements ServerEvent{
 	public Response handle(Request request, Connection connection) {
 		User user = request.from();
 		Test test = user.getTest();
-		List<List<String>> correctAnswers = TestingSystemServer.getServerHandler()
-				.getServerStorage().getAnswers(test);
+		ServerStorage serverStorage = TestingSystemServer.getServerHandler()
+				.getServerStorage();
+		TestsStorage testsStorage = serverStorage.getTestsStorage();
+		List<List<String>> correctAnswers = testsStorage.getAnswers(test);
 		int questionIndex = 0;
 		int numberOfCorrectAnswers = 0;
 		int numberOfAnswers = 0;
@@ -45,11 +48,10 @@ public class OnCompleteTestEvent implements ServerEvent{
 			}
 			answerIndex++;
 		}
-		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
 		TestResult testResult = new TestResult(numberOfAnswers, 
 				numberOfCorrectAnswers, user, test);
-		serverStorage.addTestResult(testResult);
-		serverStorage.addLog(user, "Завершил тестирование");
+		testsStorage.addTestResult(testResult);
+		serverStorage.getLogsStorage().addLog(user, "Завершил тестирование");
 		return new Response(ResponseType.Successful, testResult);
 	}
 

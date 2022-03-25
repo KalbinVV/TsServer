@@ -1,43 +1,24 @@
-package org.kalbinvv.tsserver;
+package org.kalbinvv.storage;
 
-import java.time.LocalDateTime;
-
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import org.kalbinvv.storage.interfaces.UsersStorage;
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
-import org.kalbinvv.tscore.security.Utils;
-import org.kalbinvv.tscore.test.Test;
-import org.kalbinvv.tscore.test.TestResult;
 import org.kalbinvv.tscore.user.User;
 import org.kalbinvv.tscore.user.UserEntry;
 import org.kalbinvv.tscore.user.UserType;
 
-public class VirtualServerStorage implements ServerStorage{
-
-	private HashSet<User> users;
-	private HashSet<User> onlineUsers;
-	private List<Test> tests;
-	private List<String> logs;
-	private List<TestResult> testsResults;
-	private HashMap<Test, List<List<String>>> testsAnswers;
+public class VirtualUsersStorage implements UsersStorage{
+	
+	private final Set<User> users;
+	private final Set<User> onlineUsers;
 	private boolean anonymousUsersAllowed;
-
-	public VirtualServerStorage() {
-		User defaultAdminUser = new User("admin", Utils.convertToSHA256("admin"));
-		defaultAdminUser.setType(UserType.Admin);
-		users = new HashSet<User>(Arrays.asList(defaultAdminUser));
+	
+	public VirtualUsersStorage() {
+		users = new HashSet<User>();
 		onlineUsers = new HashSet<User>();
-		tests = new ArrayList<Test>();
-		logs = new ArrayList<String>();
-		testsResults = new ArrayList<TestResult>();
-		testsAnswers = new HashMap<Test, List<List<String>>>();
 		anonymousUsersAllowed = false;
 	}
 
@@ -114,70 +95,6 @@ public class VirtualServerStorage implements ServerStorage{
 	@Override
 	public Set<User> getOnlineUsers() {
 		return onlineUsers;
-	}
-
-	@Override
-	public List<Test> getTests() {
-		return tests;
-	}
-
-	@Override
-	public void addLog(User user, String log) {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-		String logMessage = "(" + dtf.format(LocalDateTime.now()) 
-		+ ") [" + user.getStringRepresentation() + "] " + log;
-		System.out.println(logMessage);
-		logs.add(logMessage);
-	}
-
-
-	@Override
-	public List<String> getLogs() {
-		return logs;
-	}
-
-	@Override
-	public void addTest(Test test) {
-		tests.add(test);
-	}
-	
-	@Override
-	public void removeTest(Test test) {
-		tests.removeIf((Test tst) -> {
-			return tst.getName().equals(test.getName());
-		});
-	}
-
-	@Override
-	public void setAnswers(Test test, List<List<String>> answers) {
-		testsAnswers.put(test, answers);
-	}
-
-	@Override
-	public void removeAnswers(Test test) {
-		testsAnswers.keySet().removeIf((Test tst) -> {
-			return tst.getName().equals(test.getName());
-		});
-	}
-	
-	@Override
-	public List<List<String>> getAnswers(Test test) {
-		for(Test tst : tests) {
-			if(tst.getName().equals(test.getName())) {
-				return testsAnswers.get(tst);
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public void addTestResult(TestResult testResult) {
-		testsResults.add(testResult);
-	}
-
-	@Override
-	public List<TestResult> getTestsResults() {
-		return testsResults;
 	}
 
 	@Override

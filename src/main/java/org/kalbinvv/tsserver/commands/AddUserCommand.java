@@ -19,7 +19,8 @@ public class AddUserCommand implements Command{
 			System.out.println("Invalid format!");
 			return false;
 		}
-		serverHandler.getServerStorage().addUser(new User(usersParams[0], usersParams[1]));
+		serverHandler.getServerStorage().getUsersStorage()
+			.addUser(new User(usersParams[0], usersParams[1]));
 		System.out.println("User successful added!");
 		return true;
 	}

@@ -2,10 +2,17 @@ package org.kalbinvv.tsserver;
 
 import java.util.HashMap;
 
+import org.kalbinvv.storage.FilesLogsStorage;
+import org.kalbinvv.storage.ServerStorage;
+import org.kalbinvv.storage.VirtualTestsStorage;
+import org.kalbinvv.storage.VirtualUsersStorage;
 import org.kalbinvv.tscore.net.Connection;
 import org.kalbinvv.tscore.net.Request;
 import org.kalbinvv.tscore.net.RequestType;
 import org.kalbinvv.tscore.net.Response;
+import org.kalbinvv.tscore.security.Utils;
+import org.kalbinvv.tscore.user.User;
+import org.kalbinvv.tscore.user.UserType;
 import org.kalbinvv.tsserver.events.*;
 
 public class ServerHandler {
@@ -14,7 +21,11 @@ public class ServerHandler {
 	private HashMap<RequestType, ServerEvent> events;
 
 	public ServerHandler() {
-		serverStorage = new VirtualServerStorage();
+		serverStorage = new ServerStorage(new VirtualUsersStorage(),
+				new VirtualTestsStorage(), new FilesLogsStorage("logs"));
+		User defaultAdminUser = new User("admin", Utils.convertToSHA256("admin"));
+		defaultAdminUser.setType(UserType.Admin);
+		serverStorage.getUsersStorage().addUser(defaultAdminUser);
 		events = new HashMap<RequestType, ServerEvent>();
 		registerEvents();
 	}

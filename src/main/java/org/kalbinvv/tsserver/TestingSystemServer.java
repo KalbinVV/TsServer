@@ -23,7 +23,7 @@ public class TestingSystemServer {
 		System.out.println("Сервер запущен на порту " + ServerPort);
 		User defaultAdminUser = new User("admin", "admin");
 		defaultAdminUser.setType(UserType.Admin);
-		serverHandler.getServerStorage().addUser(defaultAdminUser);
+		serverHandler.getServerStorage().getUsersStorage().addUser(defaultAdminUser);
 		serverIsRunning = true;
 		Scanner scanner = new Scanner(System.in);
 		while(serverIsRunning) {

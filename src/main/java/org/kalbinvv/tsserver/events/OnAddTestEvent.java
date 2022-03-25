@@ -1,5 +1,9 @@
 package org.kalbinvv.tsserver.events;
 
+import org.kalbinvv.storage.ServerStorage;
+import org.kalbinvv.storage.interfaces.LogsStorage;
+import org.kalbinvv.storage.interfaces.TestsStorage;
+import org.kalbinvv.storage.interfaces.UsersStorage;
 import org.kalbinvv.tscore.net.Connection;
 import org.kalbinvv.tscore.net.Request;
 import org.kalbinvv.tscore.net.Response;
@@ -7,7 +11,6 @@ import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.test.Test;
 import org.kalbinvv.tscore.test.TestData;
 import org.kalbinvv.tscore.user.User;
-import org.kalbinvv.tsserver.ServerStorage;
 import org.kalbinvv.tsserver.TestingSystemServer;
 
 public class OnAddTestEvent implements ServerEvent{
@@ -15,21 +18,25 @@ public class OnAddTestEvent implements ServerEvent{
 	@Override
 	public Response handle(Request request, Connection connection) {
 		User user = request.from();
-		ServerStorage serverStorage = TestingSystemServer.getServerHandler().getServerStorage();
-		if(!serverStorage.isAdminUser(user)) {
+		ServerStorage serverStorage = TestingSystemServer.getServerHandler()
+				.getServerStorage();
+		UsersStorage usersStorage = serverStorage.getUsersStorage();
+		TestsStorage testsStorage = serverStorage.getTestsStorage();
+		LogsStorage logsStorage = serverStorage.getLogsStorage();
+		if(!usersStorage.isAdminUser(user)) {
 			return new Response(ResponseType.Unsuccessful, "Недостаточно прав");
 		}
 		TestData testData = (TestData) request.getObject();
 		Test test = testData.getTest();
-		for(Test tst : serverStorage.getTests()) {
+		for(Test tst : testsStorage.getTests()) {
 			if(tst.getName().equals(test.getName())) {
 				return new Response(ResponseType.Unsuccessful, 
 						"Тест с таким названием уже есть на сервере!");
 			}
 		}
-		serverStorage.addTest(test);
-		serverStorage.setAnswers(test, testData.getAnswers());
-		serverStorage.addLog(user, "Добавил новый тест '" + test.getName() + "'");
+		testsStorage.addTest(test);
+		testsStorage.setAnswers(test, testData.getAnswers());
+		logsStorage.addLog(user, "Добавил новый тест '" + test.getName() + "'");
 		return new Response(ResponseType.Successful);
 	}
 
