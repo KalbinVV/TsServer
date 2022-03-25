@@ -12,7 +12,6 @@ public class TestingSystemServer {
 	private static Boolean serverIsRunning;
 	private static ServerHandler serverHandler;
 	private static CommandsHandler commandsHandler;
-	private static final int ServerPort = 2090;
 
 	public static void main(String[] args) {
 		commandsHandler= new CommandsHandler();
@@ -20,7 +19,6 @@ public class TestingSystemServer {
 		setServerHandler(new ServerHandler());
 		serverThread = new Thread(new ServerThread());
 		serverThread.start();
-		System.out.println("Сервер запущен на порту " + ServerPort);
 		User defaultAdminUser = new User("admin", "admin");
 		defaultAdminUser.setType(UserType.Admin);
 		serverHandler.getServerStorage().getUsersStorage().addUser(defaultAdminUser);
