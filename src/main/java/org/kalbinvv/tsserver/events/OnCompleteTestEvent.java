@@ -1,6 +1,7 @@
 package org.kalbinvv.tsserver.events;
 
 import java.util.List;
+import java.util.Map;
 
 import org.kalbinvv.tsserver.storage.ServerStorage;
 import org.kalbinvv.tsserver.storage.interfaces.TestsStorage;
@@ -8,6 +9,7 @@ import org.kalbinvv.tscore.net.Connection;
 import org.kalbinvv.tscore.net.Request;
 import org.kalbinvv.tscore.net.Response;
 import org.kalbinvv.tscore.net.ResponseType;
+import org.kalbinvv.tscore.test.Answer;
 import org.kalbinvv.tscore.test.Question;
 import org.kalbinvv.tscore.test.QuestionType;
 import org.kalbinvv.tscore.test.Test;
@@ -24,34 +26,31 @@ public class OnCompleteTestEvent implements ServerEvent{
 		ServerStorage serverStorage = TestingSystemServer.getServerHandler()
 				.getServerStorage();
 		TestsStorage testsStorage = serverStorage.getTestsStorage();
-		List<List<String>> correctAnswers = testsStorage.getAnswers(test);
-		int questionIndex = 0;
-		int numberOfCorrectAnswers = 0;
-		int numberOfAnswers = 0;
+		Map<String, Answer> testsAnswers = testsStorage.getAnswers(test);
+		int correctAnswersAmount = 0;
+		int allAnswersAmount = 0;
 		for(Question question : test.getQuestions()) {
-			for(String userSelect : question.getUserSelect()) {
-				for(String correctAnswer : correctAnswers.get(questionIndex)) {
-					if(userSelect.equals(correctAnswer)) {
-						numberOfCorrectAnswers++;
+			if(question.getType() == QuestionType.TextFields) {
+				List<String> answers = testsAnswers.get(question.getTitle()).getVariants();
+				for(String variant : question.getUserSelect()) {
+					if(answers.contains(variant)) {
+						correctAnswersAmount++;
 						break;
 					}
 				}
+				allAnswersAmount++;
+			}else if(question.getType() == QuestionType.CheckBoxes) {
+				List<String> answers = testsAnswers.get(question.getTitle()).getVariants();
+				allAnswersAmount += answers.size();
+				for(String variant : question.getUserSelect()) {
+					if(answers.contains(variant)) {
+						correctAnswersAmount++;
+					}
+				}
 			}
-			questionIndex++;
 		}
-		int answerIndex = 0;
-		for(List<String> answers : correctAnswers) {
-			if(test.getQuestions().get(answerIndex).getType() == QuestionType.TextFields) {
-				numberOfAnswers++;
-			}else {
-				numberOfAnswers += answers.size();
-			}
-			answerIndex++;
-		}
-		TestResult testResult = new TestResult(numberOfAnswers, 
-				numberOfCorrectAnswers, user, test);
-		testsStorage.addTestResult(testResult);
-		serverStorage.getLogsStorage().addLog(user, "Завершил тестирование");
+		TestResult testResult = new TestResult(allAnswersAmount, correctAnswersAmount,
+				user, test);
 		return new Response(ResponseType.Successful, testResult);
 	}
 

@@ -6,19 +6,20 @@ import java.util.List;
 import java.util.Map;
 
 import org.kalbinvv.tsserver.storage.interfaces.TestsStorage;
+import org.kalbinvv.tscore.test.Answer;
 import org.kalbinvv.tscore.test.Test;
 import org.kalbinvv.tscore.test.TestResult;
 
 public class VirtualTestsStorage implements TestsStorage{
 	
 	private final List<Test> tests;
-	private final List<TestResult> testsResults;
-	private final Map<String, List<List<String>>> testsAnswers;
+	private final List<TestResult> results;
+	private final Map<String, Map<String, Answer>> answers;
 
 	public VirtualTestsStorage() {
 		tests = new ArrayList<Test>();
-		testsResults = new ArrayList<TestResult>();
-		testsAnswers = new HashMap<String, List<List<String>>>();
+		results = new ArrayList<TestResult>();
+		answers = new HashMap<String, Map<String, Answer>>();
 	}
 	
 	@Override
@@ -39,22 +40,22 @@ public class VirtualTestsStorage implements TestsStorage{
 	}
 
 	@Override
-	public void setAnswers(Test test, List<List<String>> answers) {
-		testsAnswers.put(test.getName(), answers);
+	public void setAnswers(Test test, Map<String, Answer> answers) {
+		this.answers.put(test.getName(), answers);
 	}
 
 	@Override
 	public void removeAnswers(Test test) {
-		testsAnswers.keySet().removeIf((String testName) -> {
+		answers.keySet().removeIf((String testName) -> {
 			return testName.equals(test.getName());
 		});
 	}
 	
 	@Override
-	public List<List<String>> getAnswers(Test test) {
+	public Map<String, Answer> getAnswers(Test test) {
 		for(Test tst : tests) {
 			if(tst.getName().equals(test.getName())) {
-				return testsAnswers.get(tst.getName());
+				return answers.get(tst.getName());
 			}
 		}
 		return null;
@@ -62,12 +63,12 @@ public class VirtualTestsStorage implements TestsStorage{
 
 	@Override
 	public void addTestResult(TestResult testResult) {
-		testsResults.add(testResult);
+		results.add(testResult);
 	}
 
 	@Override
 	public List<TestResult> getTestsResults() {
-		return testsResults;
+		return results;
 	}
 	
 }
