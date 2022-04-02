@@ -51,6 +51,9 @@ public class OnCompleteTestEvent implements ServerEvent{
 		}
 		TestResult testResult = new TestResult(allAnswersAmount, correctAnswersAmount,
 				user, test);
+		testsStorage.addTestResult(testResult);
+		serverStorage.getLogsStorage().addLog(user, "Завершил тестирование '" 
+				+ test.getName() + "'");
 		return new Response(ResponseType.Successful, testResult);
 	}
 
