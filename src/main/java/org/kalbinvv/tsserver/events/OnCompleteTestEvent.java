@@ -1,5 +1,6 @@
 package org.kalbinvv.tsserver.events;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,12 +30,15 @@ public class OnCompleteTestEvent implements ServerEvent{
 		Map<String, Answer> testsAnswers = testsStorage.getAnswers(test);
 		int correctAnswersAmount = 0;
 		int allAnswersAmount = 0;
+		Map<String, Integer> answersResult = new HashMap<String, Integer>();
 		for(Question question : test.getQuestions()) {
 			if(question.getType() == QuestionType.TextFields) {
 				List<String> answers = testsAnswers.get(question.getTitle()).getVariants();
+				answersResult.put(question.getTitle(), 0);
 				for(String variant : question.getUserSelect()) {
 					if(answers.contains(variant)) {
 						correctAnswersAmount++;
+						answersResult.put(question.getTitle(), 1);
 						break;
 					}
 				}
@@ -42,15 +46,18 @@ public class OnCompleteTestEvent implements ServerEvent{
 			}else if(question.getType() == QuestionType.CheckBoxes) {
 				List<String> answers = testsAnswers.get(question.getTitle()).getVariants();
 				allAnswersAmount += answers.size();
+				answersResult.put(question.getTitle(), 0);
 				for(String variant : question.getUserSelect()) {
 					if(answers.contains(variant)) {
 						correctAnswersAmount++;
+						answersResult.put(question.getTitle(), 
+								answersResult.get(question.getTitle()) + 1);
 					}
 				}
 			}
 		}
 		TestResult testResult = new TestResult(allAnswersAmount, correctAnswersAmount,
-				user, test);
+				user, test, answersResult);
 		testsStorage.addTestResult(testResult);
 		serverStorage.getLogsStorage().addLog(user, "Завершил тестирование '" 
 				+ test.getName() + "'");
