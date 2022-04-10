@@ -36,7 +36,7 @@ public class ServerHandler {
 		registerEvent(RequestType.UserExit, new OnQuitEvent());
 		registerEvent(RequestType.AddUser, new OnUserAddEvent());
 		registerEvent(RequestType.AddAdminUser, new OnAdminAddEvent());
-		registerEvent(RequestType.GetOnlineUsers, new OnGetOnlinePlayersEvent());
+		registerEvent(RequestType.GetOnlineUsers, new OnGetOnlineUsersEvent());
 		registerEvent(RequestType.GetAnonymousUsersAllowedSetting, new OnViewUsersAllowedSetting());
 		registerEvent(RequestType.ChangesAnonymousUsersAllowedSetting, 
 				new OnChangeUsersAllowedSetting());

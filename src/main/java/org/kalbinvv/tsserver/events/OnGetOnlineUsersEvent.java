@@ -10,7 +10,7 @@ import org.kalbinvv.tscore.net.ResponseType;
 import org.kalbinvv.tscore.user.User;
 import org.kalbinvv.tsserver.TestingSystemServer;
 
-public class OnGetOnlinePlayersEvent implements ServerEvent{
+public class OnGetOnlineUsersEvent implements ServerEvent{
 
 	@Override
 	public Response handle(Request request, Connection connection) {
